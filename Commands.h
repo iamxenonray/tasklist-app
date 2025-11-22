@@ -35,3 +35,7 @@ void ViewTasks(std::vector<std::string> s);
 void AddTask(std::vector<std::string> s);
 
 void CompleteTask(std::vector<std::string> s);
+
+void DeleteTask(std::vector<std::string> s);
+
+void UncompleteTask(std::vector<std::string> s);

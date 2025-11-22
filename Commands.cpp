@@ -17,7 +17,12 @@ void CommandMap::RunCommand(std::string key, std::vector<std::string> args)
 	Map[key](args);
 }
 
-// All mappings are to be made here
+/*
+
+All mappings are to be made here.
+All implementations must be done in this file below this.
+
+*/
 void CommandMap::InitialiseMap()
 {
 	Map["quit"] = Quit;
@@ -25,8 +30,11 @@ void CommandMap::InitialiseMap()
 	Map["view"] = ViewTasks;
 	Map["add"] = AddTask;
 	Map["complete"] = CompleteTask;
+	Map["delete"] = DeleteTask;
+	Map["uncomplete"] = UncompleteTask;
 }
 
+// Help command
 void PrintHelp(std::vector<std::string> s)
 {
 	std::cout << "---------------------\n";
@@ -40,7 +48,8 @@ void PrintHelp(std::vector<std::string> s)
 		}
 		else if (s[1] == "view")
 		{
-			std::cout << "view: Shows all tasks stored in the application.\n";
+			std::cout << "view [--hide-complete]: Shows all tasks stored in the application.\n";
+			std::cout << "Specifying the \"--hide-complete\" flag will not show completed tasks.\n";
 		}
 		else if (s[1] == "add")
 		{
@@ -58,6 +67,19 @@ void PrintHelp(std::vector<std::string> s)
 			std::cout << "complete <index>: Marks a task as complete. Tasks are identified using their numerical ID shown in the \"view\" command.\n";
 			std::cout << "<index> must be a valid ID.\n";
 		}
+		else if (s[1] == "uncomplete")
+		{
+			std::cout << "uncomplete <index>: Marks a task as incomplete. Tasks are identified using their numerical ID shown in the \"view\" command.\n";
+			std::cout << "<index> must be a valid ID.\n";
+		}
+		else if (s[1] == "help")
+		{
+			std::cout << "You're already here...\n";
+		}
+		else
+		{
+			std::cout << "Unknown command specified.\n";
+		}
 	}
 	// Default case
 	else
@@ -71,25 +93,50 @@ void PrintHelp(std::vector<std::string> s)
 		std::cout << "add: Adds a task.\n";
 		std::cout << "delete: Removes a task.\n";
 		std::cout << "complete: Marks a task as complete.\n";
+		std::cout << "uncomplete: Marks a task as incomplete.\n";
 		std::cout << "quit: Quits the application.\n";
 	}
 	std::cout << "---------------------\n";
 }
 
+
+// Quit
 void Quit(std::vector<std::string> s)
 {
 	std::cout << "Quitting Application...\n";
 	exit(0);
 }
 
+// Viewing tasks
+// TODO: Sorting by due date, hiding completed tasks
 void ViewTasks(std::vector<std::string> s)
 {
 	std::cout << "---------------------\n";
-	std::cout << "Viewing tasks...\n";
-	TaskList.PrintTaskList();
+	// Flags
+	if (s.size() > 1)
+	{
+		if (s[1] == "--hide-complete")
+		{
+			std::cout << "Viewing incomplete tasks...\n";
+			TaskList.PrintTaskList(0, true);
+		}
+		else
+		{
+			std::cout << "Unknown additional arguments, viewing default task list.\n";
+			std::cout << "Viewing tasks...\n";
+			TaskList.PrintTaskList();
+		}
+	}
+	else
+	{
+		std::cout << "Viewing tasks...\n";
+		TaskList.PrintTaskList();
+	}
+	
 	std::cout << "---------------------\n";
 }
 
+// Adding a task
 void AddTask(std::vector<std::string> s)
 {
 	std::cout << "---------------------\n";
@@ -114,6 +161,7 @@ void AddTask(std::vector<std::string> s)
 	std::cout << "---------------------\n";
 }
 
+// Marking a task as complete
 void CompleteTask(std::vector<std::string> s)
 {
 	std::cout << "---------------------\n";
@@ -134,6 +182,68 @@ void CompleteTask(std::vector<std::string> s)
 			{
 				TaskList.CompleteTask(idx);
 				std::cout << "Task ID " + std::to_string(idx) + " marked as complete!\n";
+			}
+		}
+		catch (std::exception const& e)
+		{
+			std::cout << "Error! Task ID is not a valid number!\n";
+		}
+	}
+	std::cout << "---------------------\n";
+}
+
+// Deleting a task
+void DeleteTask(std::vector<std::string> s)
+{
+	std::cout << "---------------------\n";
+	if (s.size() < 2)
+	{
+		std::cout << "Invalid usage. 2 arguments required. Usage: \"delete <ID>\"\n";
+	}
+	else
+	{
+		try
+		{
+			int idx = std::stoi(s[1]);
+			if (idx < 1 || idx > TaskList.TaskList.size())
+			{
+				std::cout << "Task ID is invalid! There is no task with that ID!\n";
+			}
+			else
+			{
+				TaskList.DeleteTask(idx);
+				std::cout << "Task ID " + std::to_string(idx) + " deleted! Please note that other Task IDs may have changed!\n";
+			}
+		}
+		catch (std::exception const& e)
+		{
+			std::cout << "Error! Task ID is not a valid number!\n";
+		}
+	}
+	std::cout << "---------------------\n";
+}
+
+// Marking a task as incomplete
+void UncompleteTask(std::vector<std::string> s)
+{
+	std::cout << "---------------------\n";
+	if (s.size() < 2)
+	{
+		std::cout << "Invalid usage. 2 arguments required. Usage: \"uncomplete <ID>\"\n";
+	}
+	else
+	{
+		try
+		{
+			int idx = std::stoi(s[1]);
+			if (idx < 1 || idx > TaskList.TaskList.size())
+			{
+				std::cout << "Task ID is invalid! There is no task with that ID!\n";
+			}
+			else
+			{
+				TaskList.UncompleteTask(idx);
+				std::cout << "Task ID " + std::to_string(idx) + " marked as incomplete!\n";
 			}
 		}
 		catch (std::exception const& e)

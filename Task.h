@@ -31,3 +31,6 @@ public:
 	void CompleteTask(int index);
 	void DeleteTask(int index);
 };
+
+// In theory could be implemented nicer with pointers, but for specialised programs this works.
+static TaskSystem TaskList;

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <algorithm>
 
 enum TaskStatus
 {
@@ -14,12 +15,16 @@ class Task
 {
 public:
 	Task() = delete;
-	Task(std::string name, std::chrono::year_month_day due);
+	Task(std::string name, std::chrono::year_month_day due, const int id);
+	Task(const Task& rhs);
 	std::string TaskName;
 	std::chrono::year_month_day DueDate;
 	TaskStatus Status;
 
-	std::string ToString();
+	// Internal use only
+	int ID;
+
+	const std::string ToString();
 };
 
 class TaskSystem

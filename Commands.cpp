@@ -48,8 +48,11 @@ void PrintHelp(std::vector<std::string> s)
 		}
 		else if (s[1] == "view")
 		{
-			std::cout << "view [--hide-complete]: Shows all tasks stored in the application.\n";
+			std::cout << "view [flags...]: Shows all tasks stored in the application.\n";
 			std::cout << "Specifying the \"--hide-complete\" flag will not show completed tasks.\n";
+			std::cout << "Specifying the \"--sort-asc\" flag will sort tasks by ascending order of due date (soonest first).\n";
+			std::cout << "Specifying the \"--sort-desc\" flag will sort tasks by ascending order of due date (furthest first).\n";
+			std::cout << "The order which you specify flags does not matter\n";
 		}
 		else if (s[1] == "add")
 		{
@@ -108,24 +111,54 @@ void Quit(std::vector<std::string> s)
 }
 
 // Viewing tasks
-// TODO: Sorting by due date, hiding completed tasks
 void ViewTasks(std::vector<std::string> s)
 {
 	std::cout << "---------------------\n";
 	// Flags
 	if (s.size() > 1)
 	{
-		if (s[1] == "--hide-complete")
+		bool hide_comp = false;
+		int sort_order = 0;
+		for (int i = 1; i < s.size(); ++i)
+		{
+			if (s[i] == "--hide-complete")
+			{
+				hide_comp = true;
+			}
+			else if (s[i] == "--sort-asc")
+			{
+				sort_order = 1;
+			}
+			else if (s[i] == "--sort-desc")
+			{
+				sort_order = 2;
+			}
+			else
+			{
+				std::cout << "Unknown argument " + s[i] + ", ignoring...\n";
+			}
+		}
+
+		if (hide_comp)
 		{
 			std::cout << "Viewing incomplete tasks...\n";
-			TaskList.PrintTaskList(0, true);
 		}
 		else
 		{
-			std::cout << "Unknown additional arguments, viewing default task list.\n";
 			std::cout << "Viewing tasks...\n";
-			TaskList.PrintTaskList();
 		}
+
+		if (sort_order == 1)
+		{
+			std::cout << "Sorting by ascending due date...\n";
+		}
+		else if (sort_order == 2)
+		{
+			std::cout << "Sorting by descending due date...\n";
+		}
+
+		TaskList.PrintTaskList(sort_order, hide_comp);
+		
 	}
 	else
 	{
@@ -169,9 +202,31 @@ void AddTask(std::vector<std::string> s)
 			// Gets current time, converts to days, passes it into YMD format, then extracts year and casts to int then to string.
 			yyyy = std::to_string(static_cast<int>(std::chrono::year_month_day(std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now())).year()));
 		}
-		// Construct as a ymd
-		std::chrono::year_month_day due_date(std::chrono::year(std::stoi(yyyy)), std::chrono::month(std::stoi(mm)), std::chrono::day(std::stoi(dd)));
-		TaskList.AddTask(description, due_date);
+		try
+		{
+			// Construct as a ymd
+			int year_val = std::stoi(yyyy);
+			unsigned int month_val = std::stoi(mm);
+			unsigned int day_val = std::stoi(dd);
+
+			std::chrono::year_month_day due_date{ std::chrono::year(year_val), std::chrono::month(month_val), std::chrono::day(day_val) };
+			// Bounds checking, helpfully provided by the chrono library.
+			if (due_date.ok())
+			{
+				TaskList.AddTask(description, due_date);
+			}
+			else
+			{
+				std::cout << "Error! Date range is invalid. Please make sure you enter a valid date in the \"DD/MM/YYYY\" or \"DD/MM\" format.\n";
+			}
+			
+		}
+		catch (std::exception const& e)
+		{
+			std::cout << "Error! Date format could not be read. Ensure that you are using the \"DD/MM/YYYY\" format or \"DD/MM\" format, including the / characters.\n";
+		}
+		
+		
 	}
 	std::cout << "---------------------\n";
 }

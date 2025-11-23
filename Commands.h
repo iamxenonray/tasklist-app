@@ -23,6 +23,7 @@ private:
 
 All functions which are mappable must follow the signature: void foo(std::vector<std::string>) .
 The remaining arguments are passed into the param, using them is optional.
+Put all functions below this point.
 
 */
 

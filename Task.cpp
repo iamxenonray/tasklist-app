@@ -20,7 +20,7 @@ void TaskSystem::PrintTaskList(int sort_type, bool hide_complete)
 	}
 }
 
-void TaskSystem::AddTask(std::string name, std::string due_date)
+void TaskSystem::AddTask(std::string name, std::chrono::year_month_day due_date)
 {
 	TaskList.push_back(Task(name, due_date));
 	std::cout << "Task added.\n";
@@ -44,7 +44,7 @@ void TaskSystem::UncompleteTask(int index)
 	TaskList[index - 1].Status = INCOMPLETE;
 }
 
-Task::Task(std::string name, std::string due)
+Task::Task(std::string name, std::chrono::year_month_day due)
 {
 	TaskName = name;
 	DueDate = due;
@@ -53,5 +53,8 @@ Task::Task(std::string name, std::string due)
 
 std::string Task::ToString()
 {
-	return ("[" + TaskName + "] [Due: " + DueDate + "] [Status: " + (Status == INCOMPLETE ? "INCOMPLETE" : "COMPLETE") + "]");
+	return ("[" + TaskName + "] [Due: " + std::to_string(static_cast<unsigned>(DueDate.day()))
+		+ "/" + std::to_string(static_cast<unsigned>(DueDate.month()))
+		+ "/" + std::to_string(static_cast<int>(DueDate.year()))
+		+ "] [Status: " + (Status == INCOMPLETE ? "INCOMPLETE" : "COMPLETE") + "]");
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <chrono>
 
 enum TaskStatus
 {
@@ -13,9 +14,9 @@ class Task
 {
 public:
 	Task() = delete;
-	Task(std::string name, std::string due);
+	Task(std::string name, std::chrono::year_month_day due);
 	std::string TaskName;
-	std::string DueDate;
+	std::chrono::year_month_day DueDate;
 	TaskStatus Status;
 
 	std::string ToString();
@@ -32,7 +33,7 @@ public:
 	hide_complete: Hide completed items
 	*/
 	void PrintTaskList(int sort_type = 0, bool hide_complete = false);
-	void AddTask(std::string name, std::string due_date);
+	void AddTask(std::string name, std::chrono::year_month_day due_date);
 	void CompleteTask(int index);
 	void DeleteTask(int index);
 	void UncompleteTask(int index);

@@ -156,7 +156,22 @@ void AddTask(std::vector<std::string> s)
 				description += " ";
 			}
 		}
-		TaskList.AddTask(description, s[1]);
+
+		// Construct the date from string
+		// Format must be DD/MM/YYYY or DD/MM (and YYYY defaults to current year)
+		std::istringstream date_stream(s[1]);
+		std::string dd, mm, yyyy;
+		std::getline(date_stream, dd, '/');
+		std::getline(date_stream, mm, '/');
+		if (!std::getline(date_stream, yyyy))
+		{
+			// Get the current year as a string. Due to no straight conversions, is pretty complex.
+			// Gets current time, converts to days, passes it into YMD format, then extracts year and casts to int then to string.
+			yyyy = std::to_string(static_cast<int>(std::chrono::year_month_day(std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now())).year()));
+		}
+		// Construct as a ymd
+		std::chrono::year_month_day due_date(std::chrono::year(std::stoi(yyyy)), std::chrono::month(std::stoi(mm)), std::chrono::day(std::stoi(dd)));
+		TaskList.AddTask(description, due_date);
 	}
 	std::cout << "---------------------\n";
 }

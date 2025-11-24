@@ -87,7 +87,7 @@ Task::Task(std::string name, std::chrono::year_month_day due, const int id) : Ta
 {
 }
 
-Task::Task(const Task& rhs) : TaskName{ rhs.TaskName }, DueDate{ rhs.DueDate }, Status{ rhs.Status}, ID{ rhs.ID }
+Task::Task(const Task& rhs) : TaskName{ rhs.TaskName }, DueDate{ rhs.DueDate }, Status{ rhs.Status }, ID{ rhs.ID }
 {
 }
 

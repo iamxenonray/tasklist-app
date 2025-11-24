@@ -32,6 +32,7 @@ void CommandMap::InitialiseMap()
 	Map["complete"] = CompleteTask;
 	Map["delete"] = DeleteTask;
 	Map["uncomplete"] = UncompleteTask;
+	Map["debug"] = DebugTest;
 }
 
 // Help command
@@ -51,7 +52,7 @@ void PrintHelp(std::vector<std::string> s)
 			std::cout << "view [flags...]: Shows all tasks stored in the application.\n";
 			std::cout << "Specifying the \"--hide-complete\" flag will not show completed tasks.\n";
 			std::cout << "Specifying the \"--sort-asc\" flag will sort tasks by ascending order of due date (soonest first).\n";
-			std::cout << "Specifying the \"--sort-desc\" flag will sort tasks by ascending order of due date (furthest first).\n";
+			std::cout << "Specifying the \"--sort-desc\" flag will sort tasks by descending order of due date (furthest first).\n";
 			std::cout << "The order which you specify flags does not matter\n";
 		}
 		else if (s[1] == "add")
@@ -323,3 +324,393 @@ void UncompleteTask(std::vector<std::string> s)
 	}
 	std::cout << "---------------------\n";
 }
+
+/*
+
+Debug code below
+Warning: Long!
+
+*/
+
+void DebugTest(std::vector<std::string> s)
+{
+	std::cout << "---------------------\n";
+	std::cout << "RUNNING DEBUG TEST:\n";
+
+	std::cout << "Preparing environment... clearing task list...\n";
+	TaskList.TaskList.clear();
+	std::vector<std::string> command_list;
+
+	std::cout << "---------------------\n";
+	std::cout << "STAGE 1: CORRECT USAGE TEST\n";
+	std::cout << "---------------------\n";
+	std::cout << "Test 1: help\n";
+	std::cout << "Expected output: General help menu displayed\n";
+	std::cout << "Running command help\n";
+	command_list.clear();
+	command_list = { "help" };
+	PrintHelp(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 2: help view\n";
+	std::cout << "Expected output: Help menu for view displayed\n";
+	std::cout << "Running command help view\n";
+	command_list.clear();
+	command_list = { "help", "view" };
+	PrintHelp(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 3: help add\n";
+	std::cout << "Expected output: Help menu for add displayed\n";
+	std::cout << "Running command help add\n";
+	command_list.clear();
+	command_list = { "help", "add" };
+	PrintHelp(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 4: help delete\n";
+	std::cout << "Expected output: Help menu for delete displayed\n";
+	std::cout << "Running command help delete\n";
+	command_list.clear();
+	command_list = { "help", "delete" };
+	PrintHelp(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 5: help complete\n";
+	std::cout << "Expected output: Help menu for complete displayed\n";
+	std::cout << "Running command help complete\n";
+	command_list.clear();
+	command_list = { "help", "complete" };
+	PrintHelp(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 6: help uncomplete\n";
+	std::cout << "Expected output: Help menu for uncomplete displayed\n";
+	std::cout << "Running command help uncomplete\n";
+	command_list.clear();
+	command_list = { "help", "uncomplete" };
+	PrintHelp(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 7: help quit\n";
+	std::cout << "Expected output: Help menu for quit displayed\n";
+	std::cout << "Running command help quit\n";
+	command_list.clear();
+	command_list = { "help", "quit" };
+	PrintHelp(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 8: view empty list\n";
+	std::cout << "Expected output: Show no tasks message\n";
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 9: add task (DD/MM/YYYY, 1 word desc)\n";
+	std::cout << "Expected output: Task added (add 25/12/2025 Testing)\n";
+	std::cout << "Running command add 25/12/2025 Testing\n";
+	command_list.clear();
+	command_list = { "add", "25/12/2025", "Testing" };
+	AddTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 10: add task (DD/MM, 1 word desc)\n";
+	std::cout << "Expected output: Task added with date of current year (add 24/12 Testing2)\n";
+	std::cout << "Running command add 24/12 Testing2\n";
+	command_list.clear();
+	command_list = { "add", "24/12", "Testing2" };
+	AddTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 11: add task (DD/MM/YYYY, multi word desc)\n";
+	std::cout << "Expected output: Task added (add 1/1/2026 Testing long@ words123)\n";
+	std::cout << "Running command add 1/1/2026 Testing long@ words123\n";
+	command_list.clear();
+	command_list = { "add", "1/1/2026", "Testing", "long@", "words123" };
+	AddTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 12: add task (DD/MM, multi word desc)\n";
+	std::cout << "Expected output: Task added with date of current year (add 30/03 Multiple word sentence)\n";
+	std::cout << "Running command add 30/03 Multiple word sentence\n";
+	command_list.clear();
+	command_list = { "add", "30/03", "Multiple", "word", "sentence" };
+	AddTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 13: mark task 2 as completed\n";
+	std::cout << "Expected output: Task 2 will be marked as completed\n";
+	std::cout << "Running command complete 2\n";
+	command_list.clear();
+	command_list = { "complete", "2" };
+	CompleteTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 14: mark task 3 as completed\n";
+	std::cout << "Expected output: Task 3 will be marked as completed\n";
+	std::cout << "Running command complete 3\n";
+	command_list.clear();
+	command_list = { "complete", "3" };
+	CompleteTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 15: mark task 2 as incomplete\n";
+	std::cout << "Expected output: Task 2 will be marked as incomplete\n";
+	std::cout << "Running command uncomplete 2\n";
+	command_list.clear();
+	command_list = { "uncomplete", "2" };
+	UncompleteTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 16: delete task 2\n";
+	std::cout << "Expected output: Task 2 will be deleted, ID of tasks after will be moved up\n";
+	std::cout << "Running command delete 2\n";
+	command_list.clear();
+	command_list = { "delete", "2" };
+	DeleteTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 17: view tasks with --hide-complete\n";
+	std::cout << "Expected output: Task 2 not be shown (2 tasks total)\n";
+	std::cout << "Running command view --hide-complete\n";
+	command_list.clear();
+	command_list = { "view" , "--hide-complete" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 18: view tasks with --sort-asc\n";
+	std::cout << "Expected output: Tasks will be shown in ascending due date order (soonest first)\n";
+	std::cout << "Running command view --sort-asc\n";
+	command_list.clear();
+	command_list = { "view" , "--sort-asc" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 19: view tasks with --sort-desc\n";
+	std::cout << "Expected output: Tasks will be shown in descending due date order (furthest first)\n";
+	std::cout << "Running command view --sort-desc\n";
+	command_list.clear();
+	command_list = { "view" , "--sort-desc" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 20: view tasks with --hide-complete and --sort-asc\n";
+	std::cout << "Expected output: Tasks will be shown in ascending due date order (soonest first), hiding complete tasks\n";
+	std::cout << "Running command view --hide-complete --sort-asc\n";
+	command_list.clear();
+	command_list = { "view" , "--hide-complete", "--sort-asc"};
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 21: view tasks with --hide-complete and --sort-desc\n";
+	std::cout << "Expected output: Tasks will be shown in descending due date order (furthest first), hiding complete tasks\n";
+	std::cout << "Running command view --hide-complete --sort-desc\n";
+	command_list.clear();
+	command_list = { "view" , "--hide-complete", "--sort-desc" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 22: switching order of --hide-complete and --sort-asc\n";
+	std::cout << "Expected output: Tasks will be shown in ascending due date order (soonest first), hiding complete tasks\n";
+	std::cout << "Running command view --sort-asc --hide-complete\n";
+	command_list.clear();
+	command_list = { "view", "--sort-asc", "--hide-complete" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 23: switching order of --hide-complete and --sort-desc\n";
+	std::cout << "Expected output: Tasks will be shown in ascending due date order (furthest first), hiding complete tasks\n";
+	std::cout << "Running command view --sort-desc --hide-complete\n";
+	command_list.clear();
+	command_list = { "view", "--sort-desc", "--hide-complete" };
+	ViewTasks(command_list);
+
+	std::cout << "\n\n---------------------\n";
+	std::cout << "STAGE 2: INCORRECT USAGE TEST\n";
+	std::cout << "---------------------\n";
+	std::cout << "Test 24: viewing with incorrect arguments\n";
+	std::cout << "Expected output: Viewing will continue as normal as if the incorrect arguments did not exist\n";
+	std::cout << "Running command view testing random hehe\n";
+	command_list.clear();
+	command_list = { "view", "testing", "random", "hehe" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 25: viewing with incorrect arguments between correct arguments\n";
+	std::cout << "Expected output: Viewing will ignore incorrect arguments but parse correct arguments\n";
+	std::cout << "Running command view testing --hide-complete random hehe\n";
+	command_list.clear();
+	command_list = { "view", "testing", "--hide-complete", "random", "hehe"};
+	ViewTasks(command_list);
+	std::cout << "Running command view testing --hide-complete random --sort-desc hehe\n";
+	command_list.clear();
+	command_list = { "view", "testing", "--hide-complete", "random", "--sort-desc", "hehe"};
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 26: adding with incorrect date format\n";
+	std::cout << "Expected output: Task will not be added, with error showing that the format is not accepted.\n";
+	std::cout << "Running command add today do work\n";
+	command_list.clear();
+	command_list = { "add", "today", "do", "work"};
+	AddTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 27: adding with correct date format but invalid date\n";
+	std::cout << "Expected output: Task will not be added, with error showing that the date is not valid.\n";
+	std::cout << "Running command add 42/12/3024 do work\n";
+	command_list.clear();
+	command_list = { "add", "42/12/3024", "do", "work" };
+	AddTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 28: completing a non-number index\n";
+	std::cout << "Expected output: Error message saying not a number\n";
+	std::cout << "Running command complete this\n";
+	command_list.clear();
+	command_list = { "complete", "this"};
+	CompleteTask(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 29: completing an out of range index\n";
+	std::cout << "Expected output: Error message saying index is out of range\n";
+	std::cout << "Running command complete 0\n";
+	command_list.clear();
+	command_list = { "complete", "0" };
+	CompleteTask(command_list);
+	std::cout << "Running command complete 1000\n";
+	command_list.clear();
+	command_list = { "complete", "1000" };
+	CompleteTask(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 30: completing with trailing rubbish\n";
+	std::cout << "Expected output: Completing as normal, trailing values are ignored\n";
+	std::cout << "Running command complete 1 extra value\n";
+	command_list.clear();
+	command_list = { "complete", "1", "extra", "value"};
+	CompleteTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 31: uncompleting a non-number index\n";
+	std::cout << "Expected output: Error message saying not a number\n";
+	std::cout << "Running command uncomplete this\n";
+	command_list.clear();
+	command_list = { "uncomplete", "this" };
+	UncompleteTask(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 32: uncompleting an out of range index\n";
+	std::cout << "Expected output: Error message saying index is out of range\n";
+	std::cout << "Running command uncomplete 0\n";
+	command_list.clear();
+	command_list = { "uncomplete", "0" };
+	UncompleteTask(command_list);
+	std::cout << "Running command uncomplete 1000\n";
+	command_list.clear();
+	command_list = { "uncomplete", "1000" };
+	UncompleteTask(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 33: uncompleting with trailing rubbish\n";
+	std::cout << "Expected output: Uncompleting as normal, trailing values are ignored\n";
+	std::cout << "Running command uncomplete 1 extra value\n";
+	command_list.clear();
+	command_list = { "uncomplete", "1", "extra", "value" };
+	UncompleteTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 34: deleting a non-number index\n";
+	std::cout << "Expected output: Error message saying not a number\n";
+	std::cout << "Running command delete this\n";
+	command_list.clear();
+	command_list = { "delete", "this" };
+	DeleteTask(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 35: deleting an out of range index\n";
+	std::cout << "Expected output: Error message saying index is out of range\n";
+	std::cout << "Running command delete 0\n";
+	command_list.clear();
+	command_list = { "delete", "0" };
+	DeleteTask(command_list);
+	std::cout << "Running command delete 1000\n";
+	command_list.clear();
+	command_list = { "delete", "1000" };
+	DeleteTask(command_list);
+
+	std::cout << "---------------------\n";
+	std::cout << "Test 36: deleting with trailing rubbish\n";
+	std::cout << "Expected output: deleting as normal, trailing values are ignored\n";
+	std::cout << "Running command delete 1 extra value\n";
+	command_list.clear();
+	command_list = { "delete", "1", "extra", "value" };
+	DeleteTask(command_list);
+	std::cout << "Running command view\n";
+	command_list.clear();
+	command_list = { "view" };
+	ViewTasks(command_list);
+
+	std::cout << "\n\n---------------------\n";
+	std::cout << "STAGE 3: QUITTING TEST\n";
+	std::cout << "---------------------\n";
+	std::cout << "Test 37: quitting the application\n";
+	std::cout << "Expected output: application closes\n";
+	std::cout << "Please run the \"quit\" command manually. Thank you.\n";
+}
+
+/*
+
+End of debug code
+
+*/

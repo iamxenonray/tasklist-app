@@ -40,3 +40,5 @@ void CompleteTask(std::vector<std::string> s);
 void DeleteTask(std::vector<std::string> s);
 
 void UncompleteTask(std::vector<std::string> s);
+
+void DebugTest(std::vector<std::string> s);
